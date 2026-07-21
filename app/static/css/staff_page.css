@@ -1,0 +1,43 @@
+/*
+.container {
+    overflow: visible !important;
+
+}
+.row.py-2 {
+    overflow: visible !important;
+}
+.col {
+    overflow: visible !important;
+}
+.container {
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+
+.submit{
+    width: 50%;
+    margin: 0 auto;
+    
+    display: block;
+    
+}
+
+.form-group.mt-2 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem;
+}
+body {
+    padding-top: 70px; 
+}
+.mb-4.text-center {
+    margin-bottom: 2rem !important;
+}
+ .layout {
+
+  display: flex;
+
+}
+
+
+ 

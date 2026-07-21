@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+{% from 'bootstrap5/form.html' import render_field, render_form_row %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+<script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/flash.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/summary.css') }}">
+
+{% endblock %}
+{% block navbar %}
+{%if current_user.role.value=='customer'%}
+{% include 'navbar.html' %}
+{%endif%}
+{%if current_user.role.value=='staff'%}
+{% include 'stafff_navbar.html' %}
+{%endif%}
+{% endblock %}
+{% block content %}
+<div class="container">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0 text-center"><strong>Installation Booking Summary</strong></h4>
+                </div>
+
+                <p><strong>🙎🏻‍♂️  Name: </strong>
+                    {{installation.user.l_name}} {{installation.user.f_name}}
+
+                   
+                
+                </p>
+                
+                <p><strong>📆 Installation Date: </strong>{{installation.date}}</p>
+                <p><strong>⏱ Installation Time: </strong>{{installation.time}}</p>
+                <p><strong>Additional Information: </strong>{{installation.decription}}</p>
+                <p><strong>🕒 Created At: </strong>{{installation.timestamp.strftime('%Y-%m-%d (%H:%M)')}}</p>
+
+            </div>
+           
+</div>
+
+{% endblock %}-->
+<!--for the barchart-->
+<!--<div class="dashboard">
+    <h1>Energy Usage (kwh)</h1>
+    <div class="charts">
+        <div class="chart-card">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+</div>
+<script>
+    window.chartData={
+        days:{{ days | tojson }},
+        energy:{{energy |tojson }}
+    };
+</script>-->

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | AutoForge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .af-header {
+            background: #1a1a1a;
+            border-bottom: 2px solid #e63946;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .af-header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: 1px; }
+        .af-header h1 span { color: #e63946; }
+
+        .unread-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: #e63946;
+            color: #fff;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .unread-badge.none {
+            background: #2a2a2a;
+            color: #666;
+        }
+
+        .unread-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: pulse 1.2s infinite;
+        }
+
+        .unread-badge.none .dot { display: none; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .af-main {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #e63946;
+            text-decoration: none;
+            font-size: 0.88rem;
+            margin-bottom: 30px;
+            transition: gap 0.2s;
+        }
+
+        .back-link:hover { gap: 12px; }
+
+        .af-main h2 {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .messages-table { width: 100%; border-collapse: collapse; }
+
+        .messages-table thead tr {
+            background: #1a1a1a;
+            border-bottom: 2px solid #e63946;
+        }
+
+        .messages-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #e63946;
+        }
+
+        .messages-table tbody tr {
+            border-bottom: 1px solid #2a2a2a;
+            transition: background 0.2s;
+        }
+
+        .messages-table tbody tr:hover { background: #1a1a1a; }
+        .messages-table tbody tr.unread { background: #1c1014; }
+        .messages-table tbody tr.unread:hover { background: #221318; }
+
+        .messages-table td {
+            padding: 16px;
+            font-size: 0.92rem;
+            color: #ccc;
+            vertical-align: top;
+        }
+
+        .messages-table td.name { color: #fff; font-weight: 600; }
+
+        .messages-table td.msg-preview {
+            max-width: 260px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-badge.new {
+            background: #e6394620;
+            color: #e63946;
+            border: 1px solid #e63946;
+        }
+
+        .status-badge.read {
+            background: #2a2a2a;
+            color: #666;
+            border: 1px solid #333;
+        }
+
+        .btn-view {
+            background: #e63946;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-view:hover { background: #c1121f; transform: translateY(-1px); }
+
+        .btn-view.viewed {
+            background: #2a2a2a;
+            color: #555;
+            cursor: default;
+        }
+
+        .btn-view.viewed:hover { background: #2a2a2a; transform: none; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-top: 3px solid #e63946;
+            border-radius: 10px;
+            padding: 36px;
+            width: 100%;
+            max-width: 560px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover { color: #fff; }
+        .modal-box h3 { font-size: 1.2rem; margin-bottom: 20px; }
+        .modal-field { margin-bottom: 14px; }
+
+        .modal-field label {
+            display: block;
+            font-size: 0.75rem;
+            color: #e63946;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .modal-field p { color: #ccc; font-size: 0.95rem; line-height: 1.5; }
+
+        .modal-field p.full-message {
+            background: #111;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #e63946;
+        }
+
+        .empty-state { text-align: center; padding: 80px 20px; color: #444; }
+        .empty-state h3 { font-size: 1.4rem; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<header class="af-header">
+    <h1>AUTO<span>FORGE</span> &mdash; Messages</h1>
+    <div class="unread-badge {% if unread_count == 0 %}none{% endif %}" id="unreadBadge">
+        <span class="dot"></span>
+        <span id="unreadCount">{{ unread_count }}</span>&nbsp;New Message{{ 's' if unread_count != 1 else '' }}
+    </div>
+</header>
+
+<main class="af-main">
+    <a href="{{url_for('staff_page')}}" class="back-link">&#8592; Back to Site</a>
+    <h2>All customer enquiries</h2>
+
+    {% if messages %}
+    <table class="messages-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Enquiry</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for msg in messages %}
+            <tr id="row-{{ msg.id }}" class="{% if msg.is_read == 'unread' %}unread{% endif %}">
+                <td>{{ msg.id }}</td>
+                <td class="name">{{ msg.f_name }} {{ msg.l_name }}</td>
+                <td>{{ msg.email }}</td>
+                <td>{{ msg.phone_number }}</td>
+                <td>{{ msg.enquiry_type }}</td>
+                <td class="msg-preview">{{ msg.message }}</td>
+                <td>
+                    <span class="status-badge {% if msg.is_read == 'read' %}read{% else %}new{% endif %}"
+                          id="badge-{{ msg.id }}">
+                        {% if msg.is_read == 'read' %}Read{% else %}New{% endif %}
+                    </span>
+                </td>
+                <td>
+                    <button
+                        class="btn-view {% if msg.is_read == 'read' %}viewed{% endif %}"
+                        id="btn-{{ msg.id }}"
+                        onclick="viewMessage(
+                            {{ msg.id }},
+                            '{{ msg.f_name | e }}',
+                            '{{ msg.l_name | e }}',
+                            '{{ msg.email | e }}',
+                            '{{ msg.phone_number | e }}',
+                            '{{ msg.enquiry_type | e }}',
+                            `{{ msg.message | e }}`
+                        )">
+                        {% if msg.is_read == 'read' %}Viewed{% else %}View{% endif %}
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <div class="empty-state">
+        <h3>No messages yet</h3>
+        <p>Customer enquiries will appear here.</p>
+    </div>
+    {% endif %}
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">&#10005;</button>
+        <h3 id="modalName"></h3>
+        <div class="modal-field">
+            <label>Email</label>
+            <p id="modalEmail"></p>
+        </div>
+        <div class="modal-field">
+            <label>Phone</label>
+            <p id="modalPhone"></p>
+        </div>
+        <div class="modal-field">
+            <label>Enquiry Type</label>
+            <p id="modalEnquiry"></p>
+        </div>
+        <div class="modal-field">
+            <label>Message</label>
+            <p class="full-message" id="modalMessage"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function viewMessage(id, fname, lname, email, phone, enquiry, message) {
+        // Populate modal
+        document.getElementById('modalName').textContent = fname + ' ' + lname;
+        document.getElementById('modalEmail').textContent = email;
+        document.getElementById('modalPhone').textContent = phone;
+        document.getElementById('modalEnquiry').textContent = enquiry;
+        document.getElementById('modalMessage').textContent = message;
+        document.getElementById('modalOverlay').classList.add('active');
+
+        const btn = document.getElementById('btn-' + id);
+
+        // Stop here if already viewed
+        if (btn.classList.contains('viewed')) return;
+
+        // Hit the DB to mark as read
+        fetch('/mark-read/' + id, { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) return;
+
+                // Update row highlight
+                document.getElementById('row-' + id).classList.remove('unread');
+
+                // Update status badge
+                const badge = document.getElementById('badge-' + id);
+                badge.textContent = 'Read';
+                badge.classList.remove('new');
+                badge.classList.add('read');
+
+                // Update button
+                btn.textContent = 'Viewed';
+                btn.classList.add('viewed');
+
+                // Update header count FROM DB response
+                const count = data.unread_count;
+                document.getElementById('unreadCount').textContent = count;
+
+                const badgeEl = document.getElementById('unreadBadge');
+                if (count === 0) {
+                    badgeEl.classList.add('none');
+                } else {
+                    badgeEl.classList.remove('none');
+                }
+            });
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+</script>
+
+</body>
+</html>

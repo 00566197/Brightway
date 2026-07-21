@@ -1,0 +1,56 @@
+<nav class="navbar">
+    <span class="open-slide">
+        <a href="#" class="hamburger" onclick="openSideMenu()">&#9776;</a>
+    </span>
+<ul>
+    <li><a href="{{url_for('index')}}">Home</a></li>
+    <li><a href="{{url_for('staff_page')}}">Dashboard</a></li>
+    <li><a href="{{url_for('messages')}}">
+        <div class="unread-badge {% if unread_count == 0 %}none{% endif %}" id="unreadBadge">
+        <span class="dot"></span>
+        <span id="unreadCount">{{ unread_count }}</span>&nbsp;View Message{{ 's' if unread_count != 1 else '' }}
+    </div>
+</a></li>
+</ul>
+</nav>
+    <div class="side-nav" id="side-menu">
+    <a href="#" class="btn-close" onclick="closeSideMenu()"></a>
+    <a href="{{url_for('index')}}">Home</a>
+    <a href="{{url_for('messages')}}">Messages</a>
+    <a href="{{url_for('add_car')}}">Upload New Car</a>
+</div>
+<style>
+    .unread-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: #e63946;
+            color: #fff;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .unread-badge.none {
+            background: #2a2a2a;
+            color: #666;
+        }
+
+        .unread-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: pulse 1.2s infinite;
+        }
+
+        .unread-badge.none .dot { display: none; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+</style>

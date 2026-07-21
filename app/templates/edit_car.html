@@ -1,0 +1,116 @@
+{% extends 'index.html' %}
+
+{%from "bootstrap5/form.html" import render_field, render_form_row%}
+
+{%block content%}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AUTOFORGE — Elite Performance Cars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+
+.form-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.card-title{
+    font-family:'Rajdhani',sans-serif;font-weight:700;
+    font-size:2.5rem;color:var(--white);margin-bottom:28px;letter-spacing:.04em}
+
+/* Form Labels */
+.form-container label {font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;display:block}
+
+
+
+/* Input Fields */
+.form-container input,
+.form-container textarea,
+.form-container select {width:100%;
+    background:var(--dark);
+color:var(--white);font-family:'Exo 2',sans-serif;font-size:.95rem;padding:12px 16px;outline:none;transition:border-color .2s;resize:none}
+
+
+
+/* Focus Effect */
+.form-container input:focus,
+.form-container textarea:focus,
+.form-container select:focus .af-form-input:focus{border-color:var(--accent)}
+
+
+/* Submit Button */
+.form-container input[type="submit"],
+.form-container button {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.form-container input[type="submit"]:hover,
+.form-container button:hover {
+    background: #0056b3;
+}
+@media(max-width:300px){
+
+}
+
+/* Error Messages */
+.error {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+<div class="form-container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title text-center fw-bold">Edit Car</div>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {{form.csrf_token()}}
+                        {{render_field(form.car_name)}}
+                        {{render_field(form.car_model)}}
+                        {{render_field(form.car_year)}}
+                        {{render_field(form.horse_power)}}
+                        {{render_field(form.top_speed)}}
+                        {{render_field(form.rating)}}
+                        {{render_field(form.car_color)}}
+                        {{render_field(form.availability)}}
+                        {{render_field(form.car_price)}}
+                        {{render_field(form.car_type)}}
+                        {{render_field(form.information)}}
+                        
+                        {{render_field(form.submit)}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
+{%endblock%}

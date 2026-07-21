@@ -1,0 +1,223 @@
+{% extends 'base.html'%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="container py-5">
+<form method="GET" action="{{url_for('staff.staff')}}" class="d-flex mb-3">
+    {{form.hidden_tag()}}
+    <div class="mb-2">
+     {{form.search(class_="form-control me-2", placeholder="Search for staff...")}}
+    </div>
+    <div class="mb-2">
+     {{form.sort(class_="form-select me-2")}}
+    </div>
+      {{form.submit(class_="btn btn-outline-success")}}
+</form>
+</div>-->
+
+<!--{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/flash.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/staff_page.css') }}">
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/flash.js') }}"></script>
+<script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+{% endblock %}
+
+{% block navbar %}
+{% include 'stafff_navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<form action="{{url_for('staff_page')}}" method="get">
+        <div class="submit">
+            <input class="werey"
+                type="text"
+                name="search"
+                placeholder="Search"
+                value="{{query}}"><button type="submit">Search</button>
+            </div>
+           
+            <div class="form-group mt-2">
+                <label for="filter">Filter by:</label>
+                <select class="form-control" name="filter" id="filter">
+                    <option value="all" {% if selected_filter =='all'%}selected{%endif%}>&#9660; All</option>
+                    <option value="consultation" {%if selected_filter =='consultation'%}selected{%endif%}>&#9660; Consultations</option>
+                    <option value="descending" {%if selected_filter =='descending'%}selected{%endif%}>&#9660; Descending</option>
+
+                </select><button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+            
+        </form> 
+    <div class="container-fluid">
+    <div class="row py-2">
+        <div class="col">
+            <h2 class="mb-4 text-center">Consultation Bookings</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <th>#</th>
+                            <th>Customer Name</th>
+                            <th>Date</th>
+                            <th>Time(kwh)</th>
+                            <th>User Id</th>
+                            <th>View</th>
+                        </thead>
+                        <tbody>
+                            {%for consultation in consultations%}
+                            <tr>
+                                <td>{{consultation.id}}</td>
+                                <td>{{consultation.user.f_name}} {{consultation.user.l_name}}</td>
+                                <td>{{consultation.date}}</td>
+                                <td>{{consultation.time}}</td>
+                                <td>{{consultation.user_id}}</td>
+                                <td><a href="{{url_for('view_consultation_summary',id=consultation.id)}}" class="btn btn-primary">View Session</a></td>
+                            </tr>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row py-2">
+        <div class="col">
+            <h2 class="mb-4 text-center">Installation Bookings</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <th>#</th>
+                            <th>Customer Name</th>
+                            <th>Date</th>
+                            <th>Time(kwh)</th>
+                            <th>User Id</th>
+                            <th>View</th>
+                        </thead>
+                        <tbody>
+                            {%for installation in installations%}
+                            <tr>
+                                <td>{{installation.id}}</td>
+                                <td>{{installation.user.f_name}} {{installation.user.l_name}}</td>
+                                <td>{{installation.date}}</td>
+                                <td>{{installation.time}}</td>
+                                <td>{{installation.user_id}}</td>
+                                <td><a href="{{url_for('view_installation_summary',id=installation.id)}}" class="btn btn-primary">View Session</a></td>
+                            </tr>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}-->

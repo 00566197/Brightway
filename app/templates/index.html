@@ -1,0 +1,55 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    {{ bootstrap.load_css() }}
+
+    {% block styles %}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/flash.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/pop.css')}}">
+     {% endblock %}
+</head>
+<body>
+
+{% block navbar %}{% endblock %}
+
+ {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+<div id="flash-container">
+      {% for category, message in messages %}
+<div class="flash flash-{{ category }}">
+          {{ message }}
+</div>
+      {% endfor %}
+</div>
+  {% endif %}
+{% endwith %}
+<div id="popup" class="popup">
+
+        <div class="popup-content">
+
+            <p>This website uses cookies to improve your experience.</p>
+
+            <button id="accept">Accept</button>
+            <button id="reject">Reject</button>
+
+        </div>
+
+    </div>
+
+{%block content%}
+
+    
+{% endblock %}
+{{ bootstrap.load_js() }}
+
+{% block scripts %}
+<script src="{{url_for('static', filename='js/popup.js')}}"></script>
+{% endblock %}
+</body>
+</html>
+
+ 

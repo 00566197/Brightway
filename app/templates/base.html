@@ -1,0 +1,917 @@
+{% extends 'index.html' %}
+
+{%from "bootstrap5/form.html" import render_field, render_form_row%}
+{%block content%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AUTOFORGE — Elite Performance Cars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--carbon:#0a0a0c;--dark:#111318;--panel:#16191f;--rim:#1e2330;--steel:#2c3244;--accent:#e8433a;--amber:#f0a500;--text:#d6dae6;--muted:#6b7280;--white:#f0f2f8}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+/* NAV */
+.af-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,12,0.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(232,67,58,0.2)}
+.af-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.6rem;letter-spacing:.18em;color:var(--white);text-decoration:none}
+.af-logo span{color:var(--accent)}
+.af-navlinks{display:flex;gap:32px;list-style:none}
+.af-navlinks a{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.af-navlinks a:hover{color:var(--accent)}
+.af-cta{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--white);background:var(--accent);border:none;padding:9px 22px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:background .2s;text-decoration:none;display:inline-block}
+.af-cta:hover{background:#c73830}
+
+/* HERO */
+.af-hero{min-height:55vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 60px;position:relative;overflow:hidden}
+.af-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(108deg,transparent 0,transparent 120px,rgba(232,67,58,.03) 120px,rgba(232,67,58,.03) 121px);pointer-events:none}
+.af-hero::after{content:'';position:absolute;bottom:-200px;left:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(232,67,58,.12) 0%,transparent 65%);pointer-events:none}
+.af-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.3em;color:var(--accent);margin-bottom:20px;text-transform:uppercase}
+.af-htitle{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(2.8rem,7vw,6rem);line-height:.92;color:var(--white);max-width:900px}
+.af-htitle em{font-style:normal;color:var(--accent);display:block}
+.af-hsub{margin-top:24px;font-size:1rem;font-weight:300;color:var(--muted);max-width:460px;line-height:1.7}
+.af-hstats{display:flex;gap:52px;margin-top:48px}
+.af-stat-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:var(--white);line-height:1}
+.af-stat-num span{color:var(--accent);font-size:1.1rem}
+.af-stat-lbl{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+
+/* MARQUEE */
+.af-marquee{overflow:hidden;padding:18px 0;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim);background:var(--dark)}
+.af-mtrack{display:flex;gap:48px;animation:af-scroll 24s linear infinite;white-space:nowrap;width:max-content}
+.af-mitem{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:18px}
+.af-mitem::before{content:'◆';color:var(--accent);font-size:.5rem}
+@keyframes af-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTION SHARED */
+.af-section{padding:80px 48px 100px}
+.af-section-tag{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.28em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.af-section-tag::before{content:'';width:32px;height:1px;background:var(--accent)}
+.af-section-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(2rem,4vw,3rem);color:var(--white);letter-spacing:.02em;margin-bottom:8px}
+.af-section-sub{color:var(--muted);font-size:.95rem;font-weight:300;line-height:1.7;max-width:560px;margin-top:8px}
+
+/* INVENTORY */
+.af-inv-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px}
+.af-filters{display:flex;gap:10px;flex-wrap:wrap}
+.af-fbtn{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 18px;border:1px solid var(--steel);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+.af-fbtn:hover,.af-fbtn.active{border-color:var(--accent);color:var(--white);background:rgba(232,67,58,.08)}
+.af-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px}
+.af-empty{grid-column:1/-1;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;padding:60px 0}
+
+/* CARD */
+.af-card{background:var(--panel);border:1px solid var(--rim);position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.22,.61,.36,1),border-color .25s;cursor:pointer}
+.af-card:hover{transform:translateY(-6px);border-color:var(--accent)}
+.af-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 28px 28px 0;border-color:transparent var(--carbon) transparent transparent;z-index:2;transition:border-color .25s}
+.af-card:hover::after{border-color:transparent var(--accent) transparent transparent}
+.af-badge{position:absolute;top:16px;left:0;font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;padding:5px 14px 5px 10px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%);z-index:3}
+.b-av{background:#1a472a;color:#4ade80}.b-li{background:#4a2e00;color:var(--amber)}.b-so{background:#2a1010;color:#f87171}
+
+/* CARD SLIDESHOW */
+.af-imgwrap{height:220px;overflow:hidden;background:var(--dark);position:relative}
+.af-strack{display:flex;height:100%;transition:transform .65s cubic-bezier(.22,.61,.36,1)}
+.af-strack img{width:100%;height:100%;object-fit:cover;flex-shrink:0}
+.af-sdots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:4;pointer-events:none}
+.af-sdots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);transition:background .2s,transform .2s}
+.af-sdots span.on{background:var(--accent);transform:scale(1.35)}
+.af-nophoto{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}
+
+/* CARD BODY */
+.af-cardbody{padding:24px 24px 20px}
+.af-carmake{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.af-carmodel{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.55rem;color:var(--white);letter-spacing:.03em;margin-bottom:16px;line-height:1.1}
+.af-specs{display:flex;margin-bottom:20px;border:1px solid var(--rim)}
+.af-spec{flex:1;padding:10px 12px;border-right:1px solid var(--rim);display:flex;flex-direction:column;gap:3px}
+.af-spec:last-child{border-right:none}
+.af-sv{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;color:var(--white);line-height:1}
+.af-sk{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.af-cardfooter{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--rim)}
+.af-plbl{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+.af-price{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.7rem;color:var(--white);line-height:1}
+.af-price sup{font-size:.9rem;vertical-align:super;color:var(--accent)}
+.af-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--white);background:var(--accent);border:none;padding:10px 20px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:background .2s;white-space:nowrap}
+.af-btn:hover{background:#c73830}
+.af-btn:disabled{background:var(--steel);color:var(--muted);cursor:not-allowed}
+
+/* FINANCE SECTION */
+#finance{background:var(--dark);border-top:1px solid var(--rim);border-bottom:1px solid var(--rim)}
+.af-fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:start}
+.af-fin-calc{background:var(--panel);border:1px solid var(--rim);padding:36px}
+.af-fin-calc-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.4rem;color:var(--white);margin-bottom:28px;letter-spacing:.04em}
+.af-fin-field{margin-bottom:20px}
+.af-fin-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;display:block}
+.af-fin-input{width:100%;background:var(--dark);border:1px solid var(--steel);color:var(--white);font-family:'Rajdhani',sans-serif;font-size:1.1rem;padding:12px 16px;outline:none;transition:border-color .2s}
+.af-fin-input:focus{border-color:var(--accent)}
+.af-fin-range{width:100%;accent-color:var(--accent);margin-top:8px}
+.af-fin-result{margin-top:28px;padding:24px;background:var(--dark);border:1px solid var(--rim);display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.af-fin-res-item{}
+.af-fin-res-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.6rem;color:var(--amber);line-height:1}
+.af-fin-res-key{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.af-fin-options{display:flex;flex-direction:column;gap:20px}
+.af-fin-card{background:var(--panel);border:1px solid var(--rim);padding:28px;transition:border-color .25s}
+.af-fin-card:hover{border-color:var(--accent)}
+.af-fin-card-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:var(--white);margin-bottom:8px}
+.af-fin-card-desc{font-size:.88rem;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.af-fin-tag{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--accent);color:var(--accent)}
+.af-calc-btn{width:100%;margin-top:24px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--white);background:var(--accent);border:none;padding:14px;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:background .2s}
+.af-calc-btn:hover{background:#c73830}
+
+/* CONTACT SECTION */
+#contact{background:var(--carbon);border-top:1px solid var(--rim)}
+.af-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.af-contact-info{display:flex;flex-direction:column;gap:24px}
+.af-contact-card{background:var(--panel);border:1px solid var(--rim);padding:24px 28px;display:flex;align-items:flex-start;gap:18px;transition:border-color .25s}
+.af-contact-card:hover{border-color:var(--accent)}
+.af-contact-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.af-contact-card-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;color:var(--white);margin-bottom:4px;letter-spacing:.04em}
+.af-contact-card-val{font-size:.88rem;color:var(--muted);line-height:1.6}
+.af-contact-form{background:var(--panel);border:1px solid var(--rim);padding:36px}
+.af-form-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.4rem;color:var(--white);margin-bottom:28px;letter-spacing:.04em}
+.af-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.af-form-field{margin-bottom:16px}
+.af-form-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;display:block}
+.af-form-input{width:100%;background:var(--dark);border:1px solid var(--steel);color:var(--white);font-family:'Exo 2',sans-serif;font-size:.95rem;padding:12px 16px;outline:none;transition:border-color .2s;resize:none}
+.af-form-input:focus{border-color:var(--accent)}
+.af-form-btn{width:100%;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--white);background:var(--accent);border:none;padding:14px;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:background .2s;margin-top:8px}
+.af-form-btn:hover{background:#c73830}
+.af-form-success{display:none;background:#1a472a;border:1px solid #4ade80;color:#4ade80;font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:14px 18px;margin-top:16px}
+
+/* MODAL */
+.af-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.88);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.af-overlay.open{opacity:1;pointer-events:all}
+.af-modal{background:var(--panel);border:1px solid var(--rim);width:92%;max-width:740px;max-height:92vh;overflow-y:auto;position:relative}
+.af-mhead{padding:26px 30px 18px;border-bottom:1px solid var(--rim);display:flex;justify-content:space-between;align-items:flex-start}
+.af-mtitle{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:var(--white);line-height:1}
+.af-mmake{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.18em;color:var(--muted);margin-top:5px;text-transform:uppercase}
+.af-mclose{background:none;border:1px solid var(--steel);color:var(--muted);width:36px;height:36px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.af-mclose:hover{border-color:var(--accent);color:var(--accent)}
+.af-mbody{padding:26px 30px 30px}
+
+/* MODAL GALLERY */
+.af-gallery{position:relative;margin-bottom:24px}
+.af-gmain{height:300px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;cursor:zoom-in;background:var(--dark)}
+.af-gmain img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .3s}
+.af-gmain img:hover{transform:scale(1.03)}
+.af-garrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.7);border:1px solid var(--rim);color:var(--white);width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.4rem;z-index:5;transition:background .2s,border-color .2s;user-select:none}
+.af-garrow:hover{background:var(--accent);border-color:var(--accent)}
+.af-garrow.gl{left:10px}.af-garrow.gr{right:10px}
+.af-gctr{position:absolute;bottom:8px;right:12px;font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--white);background:rgba(0,0,0,.65);padding:3px 10px;letter-spacing:.1em;z-index:5}
+.af-thumbs{display:flex;gap:8px;padding:10px 0 4px;overflow-x:auto}
+.af-thumbs img{width:68px;height:50px;object-fit:cover;cursor:pointer;border:2px solid transparent;opacity:.5;transition:opacity .2s,border-color .2s;flex-shrink:0}
+.af-thumbs img.on{opacity:1;border-color:var(--accent)}
+
+/* MODAL SPECS */
+.af-mspecs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rim);border:1px solid var(--rim);margin-bottom:20px}
+.af-msc{background:var(--panel);padding:14px 18px;display:flex;flex-direction:column;gap:4px}
+.af-msv{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.15rem;color:var(--white)}
+.af-msk{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.af-mdesc{color:var(--muted);font-size:.92rem;line-height:1.65;margin-bottom:22px}
+.af-mprow{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--rim);flex-wrap:wrap;gap:14px}
+.af-mpbig{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2.2rem;color:var(--amber);line-height:1}
+.af-mavail{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:6px 14px;border:1px solid}
+.av-av{border-color:#4ade80;color:#4ade80}.av-li{border-color:var(--amber);color:var(--amber)}.av-so{border-color:#f87171;color:#f87171}
+.af-mbook{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--white);background:var(--accent);border:none;padding:14px 28px;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:background .2s}
+.af-mbook:hover{background:#c73830}
+.af-mbook:disabled{background:var(--steel);color:var(--muted);cursor:not-allowed}
+
+/* LIGHTBOX */
+.af-lb{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.af-lb.open{opacity:1;pointer-events:all}
+.af-lbimg{max-width:92vw;max-height:88vh;object-fit:contain;border:1px solid var(--rim)}
+.af-lbarrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(20,20,20,.85);border:1px solid var(--rim);color:var(--white);width:52px;height:52px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.6rem;z-index:10;transition:background .2s;user-select:none}
+.af-lbarrow:hover{background:var(--accent)}.af-lbarrow.ll{left:20px}.af-lbarrow.lr{right:20px}
+.af-lbclose{position:absolute;top:18px;right:22px;background:none;border:1px solid var(--steel);color:var(--white);width:40px;height:40px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.af-lbclose:hover{border-color:var(--accent);color:var(--accent)}
+.af-lbctr{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.55);letter-spacing:.15em}
+
+/* FOOTER */
+.af-footer{background:var(--dark);border-top:1px solid var(--rim);padding:48px 48px 32px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px}
+.af-fbrand{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.4rem;letter-spacing:.18em;color:var(--white);margin-bottom:14px}
+.af-fbrand span{color:var(--accent)}
+.af-ftagline{color:var(--muted);font-size:.88rem;font-weight:300;line-height:1.6}
+.af-fcoltitle{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:16px}
+.af-flinks{list-style:none;display:flex;flex-direction:column;gap:10px}
+.af-flinks a{font-size:.88rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.af-flinks a:hover{color:var(--white)}
+.af-fbot{grid-column:1/-1;padding-top:22px;border-top:1px solid var(--rim);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.af-fcopy{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--muted)}
+
+@media(max-width:900px){
+  .af-nav{padding:0 20px}.af-navlinks{display:none}
+  .af-hero{padding:100px 20px 40px}
+  .af-section{padding:40px 20px 60px}
+  .af-fin-grid,.af-contact-grid{grid-template-columns:1fr}
+  .af-form-row{grid-template-columns:1fr}
+  .af-footer{grid-template-columns:1fr 1fr;padding:40px 20px}
+  .af-gmain{height:220px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="af-nav">
+  <a class="af-logo" href="/">AUTO<span>FORGE</span></a>
+  <ul class="af-navlinks">
+    <li><a href="#inventory">Inventory</a></li>
+    <li><a href="#finance">Finance</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="af-cta" href="#inventory">+ Showroom</a>
+</nav>
+
+<!-- HERO -->
+<section class="af-hero">
+  <div class="af-eyebrow">// Performance Automotive — Est. 2009</div>
+  <h1 class="af-htitle">DRIVE<em>BEYOND</em>LIMITS</h1>
+  <p class="af-hsub">Hand-curated performance vehicles sourced worldwide. Live pricing. Real-time availability. Zero compromise.</p>
+  <div class="af-hstats">
+    <div><div class="af-stat-num">{{ cars|length }}<span>+</span></div><div class="af-stat-lbl">Vehicles Listed</div></div>
+    <div><div class="af-stat-num">4.9<span>★</span></div><div class="af-stat-lbl">Customer Rating</div></div>
+    <div><div class="af-stat-num">19<span>yr</span></div><div class="af-stat-lbl">Experience</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="af-marquee">
+  <div class="af-mtrack" id="marqueeTrack">
+    {% for car in cars %}<span class="af-mitem">{{ car.car_name }} {{ car.car_model }}</span>{% endfor %}
+    {% for car in cars %}<span class="af-mitem">{{ car.car_name }} {{ car.car_model }}</span>{% endfor %}
+    {% if not cars %}
+    <span class="af-mitem">Ferrari SF90</span><span class="af-mitem">Porsche 911 GT3</span><span class="af-mitem">McLaren 720S</span><span class="af-mitem">Lamborghini Huracán</span><span class="af-mitem">Aston Martin DB12</span><span class="af-mitem">BMW M4 CSL</span>
+    <span class="af-mitem">Ferrari SF90</span><span class="af-mitem">Porsche 911 GT3</span><span class="af-mitem">McLaren 720S</span><span class="af-mitem">Lamborghini Huracán</span><span class="af-mitem">Aston Martin DB12</span><span class="af-mitem">BMW M4 CSL</span>
+    {% endif %}
+  </div>
+</div>
+
+
+<!-- INVENTORY -->
+<section class="af-section" id="inventory">
+  <div class="af-inv-header">
+    <div>
+      <div class="af-section-tag">Current Inventory</div>
+      <div class="af-section-title">Live Showroom</div>
+      <div class="af-section-sub">Browse our full collection below. Click any car to view details, images and reserve.</div>
+    </div>
+    <div class="af-filters">
+      <button class="af-fbtn active" onclick="filterCards('all',this)">All</button>
+      <button class="af-fbtn" onclick="filterCards('available',this)">Available</button>
+      <button class="af-fbtn" onclick="filterCards('limited',this)">Limited</button>
+      <button class="af-fbtn" onclick="filterCards('sold',this)">Sold</button>
+    </div>
+  </div>
+  <p><div style="margin-bottom:32px">
+
+  <!-- MAIN SEARCH BAR -->
+  <div style="display:flex;gap:0;border:1px solid var(--steel);max-width:600px;margin-bottom:14px;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%)">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search make, model, colour, year..."
+      oninput="liveSearch()"
+      style="flex:1;background:var(--dark);border:none;color:var(--white);
+             font-family:'Exo 2',sans-serif;font-size:.95rem;padding:14px 20px;
+             outline:none;letter-spacing:.02em"
+    >
+    <button
+      onclick="liveSearch()"
+      style="background:var(--accent);border:none;color:var(--white);
+             padding:14px 24px;font-family:'Rajdhani',sans-serif;font-weight:700;
+             font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+             transition:background .2s;white-space:nowrap"
+      onmouseover="this.style.background='#c73830'"
+      onmouseout="this.style.background='var(--accent)'"
+    >
+      &#9906; Search
+    </button>
+  </div>
+
+  <!-- FILTER ROW -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+
+    <!-- Availability -->
+    <select
+      id="filterAvail"
+      onchange="liveSearch()"
+      style="background:var(--dark);border:1px solid var(--steel);color:var(--muted);
+             font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.82rem;
+             letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;
+             outline:none;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)"
+    >
+      <option value="">All Availability</option>
+      <option value="available">Available</option>
+      <option value="limited">Limited Stock</option>
+      <option value="sold">Sold</option>
+    </select>
+
+    <!-- Min Price -->
+    <div style="position:relative">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);
+                   color:var(--accent);font-family:'Rajdhani',sans-serif;font-weight:700;
+                   font-size:.9rem;pointer-events:none">£</span>
+      <input
+        type="number"
+        id="filterMin"
+        placeholder="Min Price"
+        oninput="liveSearch()"
+        style="width:130px;background:var(--dark);border:1px solid var(--steel);
+               color:var(--white);font-family:'Rajdhani',sans-serif;font-size:.85rem;
+               padding:9px 14px 9px 26px;outline:none;
+               clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)"
+      >
+    </div>
+
+    <!-- Max Price -->
+    <div style="position:relative">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);
+                   color:var(--accent);font-family:'Rajdhani',sans-serif;font-weight:700;
+                   font-size:.9rem;pointer-events:none">£</span>
+      <input
+        type="number"
+        id="filterMax"
+        placeholder="Max Price"
+        oninput="liveSearch()"
+        style="width:130px;background:var(--dark);border:1px solid var(--steel);
+               color:var(--white);font-family:'Rajdhani',sans-serif;font-size:.85rem;
+               padding:9px 14px 9px 26px;outline:none;
+               clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)"
+      >
+    </div>
+
+    <!-- Car Type -->
+    <select
+      id="filterType"
+      onchange="liveSearch()"
+      style="background:var(--dark);border:1px solid var(--steel);color:var(--muted);
+             font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.82rem;
+             letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;
+             outline:none;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)"
+    >
+      <option value="">All Types</option>
+      <option value="new">New</option>
+      <option value="used">Used</option>
+      <option value="fixed">Fixed Price</option>
+    </select>
+
+    <!-- Clear button — only shows when something is typed -->
+    <button
+      id="clearSearch"
+      onclick="clearSearchFields()"
+      style="display:none;background:transparent;border:1px solid var(--steel);
+             color:var(--muted);font-family:'Rajdhani',sans-serif;font-weight:600;
+             font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+             padding:9px 16px;cursor:pointer;transition:all .2s;
+             clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)"
+      onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--white)'"
+      onmouseout="this.style.borderColor='var(--steel)';this.style.color='var(--muted)'"
+    >
+      ✕ Clear
+    </button>
+
+  </div>
+
+  <!-- RESULTS COUNT -->
+  <div
+    id="searchResultsCount"
+    style="display:none;margin-top:14px;font-family:'Share Tech Mono',monospace;
+           font-size:.65rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase"
+  ></div>
+
+</div></p>
+  <div class="af-grid" id="carGrid"></div>
+</section>
+
+<!-- FINANCE -->
+<section class="af-section" id="finance">
+  <div class="af-section-tag">Flexible Ownership</div>
+  <div class="af-section-title">Finance Options</div>
+  <div class="af-section-sub">Get behind the wheel sooner. Calculate your monthly payments and explore our finance products below.</div>
+  <div class="af-fin-grid">
+
+    <div class="af-fin-calc">
+      <div class="af-fin-calc-title">Monthly Payment Calculator</div>
+
+      <div class="af-fin-field">
+        <label class="af-fin-label">Vehicle Price (£)</label>
+        <input class="af-fin-input" type="number" id="finPrice" value="50000" min="1000" max="2000000" oninput="calcFinance()">
+      </div>
+
+      <div class="af-fin-field">
+        <label class="af-fin-label">Deposit (£) — <span id="depositPct">20%</span></label>
+        <input class="af-fin-input" type="number" id="finDeposit" value="10000" min="0" oninput="calcFinance()">
+        <input class="af-fin-range" type="range" id="finDepositRange" min="0" max="200000" value="10000" oninput="syncDeposit(this.value)">
+      </div>
+
+      <div class="af-fin-field">
+        <label class="af-fin-label">Term — <span id="termLbl">48 months</span></label>
+        <input class="af-fin-range" type="range" id="finTerm" min="12" max="84" step="12" value="48" oninput="calcFinance();document.getElementById('termLbl').textContent=this.value+' months'">
+      </div>
+
+      <div class="af-fin-field">
+        <label class="af-fin-label">APR (%)</label>
+        <input class="af-fin-input" type="number" id="finAPR" value="6.9" step="0.1" min="0" max="30" oninput="calcFinance()">
+      </div>
+
+      <div class="af-fin-result">
+        <div class="af-fin-res-item"><div class="af-fin-res-val" id="resMonthly">£—</div><div class="af-fin-res-key">Monthly Payment</div></div>
+        <div class="af-fin-res-item"><div class="af-fin-res-val" id="resTotalCost">£—</div><div class="af-fin-res-key">Total Cost</div></div>
+        <div class="af-fin-res-item"><div class="af-fin-res-val" id="resInterest">£—</div><div class="af-fin-res-key">Total Interest</div></div>
+        <div class="af-fin-res-item"><div class="af-fin-res-val" id="resLoan">£—</div><div class="af-fin-res-key">Loan Amount</div></div>
+      </div>
+      <button class="af-calc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Apply Now →</button>
+    </div>
+
+    <div class="af-fin-options">
+      <div class="af-fin-card">
+        <div class="af-fin-card-title">Hire Purchase (HP)</div>
+        <div class="af-fin-card-desc">Pay a deposit then fixed monthly payments over an agreed term. You own the car outright at the end. Simple, straightforward, and no mileage limits.</div>
+        <span class="af-fin-tag">Own At End</span>
+      </div>
+      <div class="af-fin-card">
+        <div class="af-fin-card-title">Personal Contract Purchase (PCP)</div>
+        <div class="af-fin-card-desc">Lower monthly payments with a larger final "balloon" payment. At the end, choose to buy the car, hand it back, or use any equity towards your next vehicle.</div>
+        <span class="af-fin-tag">Most Popular</span>
+      </div>
+      <div class="af-fin-card">
+        <div class="af-fin-card-title">Personal Loan</div>
+        <div class="af-fin-card-desc">Borrow a fixed amount from our lending partners at a competitive rate. You own the car from day one with no mileage restrictions.</div>
+        <span class="af-fin-tag">Own From Day 1</span>
+      </div>
+      <div class="af-fin-card">
+        <div class="af-fin-card-title">Lease (PCH)</div>
+        <div class="af-fin-card-desc">Drive a new car every few years with no depreciation risk. Fixed monthly costs, servicing packages available, simply return at end of term.</div>
+        <span class="af-fin-tag">Lowest Monthly Cost</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="af-section" id="contact">
+  <div class="af-section-tag">Get In Touch</div>
+  <div class="af-section-title">Contact Us</div>
+  <div class="af-section-sub">Ready to reserve, have a question, or want to book a test drive? Our team responds within 2 hours during business hours.</div>
+  <div class="af-contact-grid">
+
+    <div class="af-contact-info">
+      <div class="af-contact-card">
+        <div class="af-contact-icon">📍</div>
+        <div>
+          <div class="af-contact-card-title">Showroom Address</div>
+          <div class="af-contact-card-val">AutoForge HQ, Unit 12 Performance Park<br>Birmingham, B1 1AA, United Kingdom</div>
+        </div>
+      </div>
+      <div class="af-contact-card">
+        <div class="af-contact-icon">📞</div>
+        <div>
+          <div class="af-contact-card-title">Phone</div>
+          <div class="af-contact-card-val">Sales: 0121 000 1234<br>Finance: 0121 000 5678</div>
+        </div>
+      </div>
+      <div class="af-contact-card">
+        <div class="af-contact-icon">✉️</div>
+        <div>
+          <div class="af-contact-card-title">Email</div>
+          <div class="af-contact-card-val">info@autoforge.co.uk<br>finance@autoforge.co.uk</div>
+        </div>
+      </div>
+      <div class="af-contact-card">
+        <div class="af-contact-icon">🕐</div>
+        <div>
+          <div class="af-contact-card-title">Opening Hours</div>
+          <div class="af-contact-card-val">Monday – Saturday: 9am – 7pm<br>Sunday: 10am – 4pm</div>
+        </div>
+      </div>
+    </div>
+    <form id="contactForm" action="" method="post" enctype="multipart/form-data">
+                        {{form.csrf_token()}}
+                  <div class="af-contact-form">
+      <div class="af-form-title">Send a Message</div>
+      <div class="af-form-row">
+        <div>
+          {{render_field(form.f_name)}}
+        </div>   
+        <div >
+          {{render_field(form.l_name)}}
+        </div>
+      </div>
+      <div class="af-form-field">
+        {{render_field(form.email)}}
+      </div>
+      <div class="af-form-field">
+        {{render_field(form.phone_number)}}
+      </div>
+      <div class="af-form-field">
+      {{render_field(form.enquiry_type)}}
+      </div>
+      <div class="af-form-field">
+        {{render_field(form.message)}}
+      </div>
+      <div class="d-grid"  >
+       {{render_field(form.submit)}}
+      </div>
+      <div class="af-form-success" id="formSuccess">✓ Message sent! We'll be in touch as soon as posible .</div>
+    </div>
+  </div>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer class="af-footer">
+  <div>
+    <div class="af-fbrand">AUTO<span>FORGE</span></div>
+    <p class="af-ftagline">Specialists in high-performance and luxury vehicles. Every car hand-inspected, every price transparent, every drive unforgettable.</p>
+  </div>
+  <div>
+    <div class="af-fcoltitle">Quick Links</div>
+    <ul class="af-flinks">
+      <li><a href="#inventory">Inventory</a></li>
+      <li><a href="{{ url_for('add_car') }}">List a Car</a></li>
+      <li><a href="#finance">Finance Calculator</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="af-fcoltitle">Legal</div>
+    <ul class="af-flinks">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Cookie Policy</a></li>
+      <li><a href="#">Terms of Sale</a></li>
+    </ul>
+  </div>
+  <div class="af-fbot">
+    <div class="af-fcopy">© 2026 AUTOFORGE LTD — ALL RIGHTS RESERVED</div>
+    <div class="af-fcopy">FCA AUTHORISED · ICO REGISTERED · VAT 123 456 789</div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="af-overlay" id="afOverlay" onclick="overlayClick(event)">
+  <div class="af-modal" id="afModal">
+    <div class="af-mhead">
+      <div>
+        <div class="af-mtitle" id="mTitle"></div>
+        <div class="af-mmake" id="mMake"></div>
+      </div>
+      <button class="af-mclose" onclick="closeModal()">✕</button>
+    </div>
+    <div class="af-mbody">
+      <div class="af-gallery" id="mGallery">
+        <div class="af-gmain" id="mGmain" onclick="openLightbox()">
+          <span class="af-garrow gl" id="gArrowL" onclick="gPrev(event)">‹</span>
+          <img id="mGimg" src="" alt="">
+          <span class="af-garrow gr" id="gArrowR" onclick="gNext(event)">›</span>
+          <div class="af-gctr" id="mGctr"></div>
+        </div>
+        <div class="af-thumbs" id="mThumbs"></div>
+      </div>
+      <div class="af-mspecs" id="mSpecs"></div>
+      <p class="af-mdesc" id="mDesc"></p>
+      <div class="af-mprow">
+        <div>
+          <div class="af-plbl">List Price</div>
+          <div class="af-mpbig" id="mPrice"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+          <div class="af-mavail" id="mAvail"></div>
+          <button class="af-mbook" id="mBook">Reserve This Car</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="af-lb" id="afLb" onclick="lbOverlayClick(event)">
+  <button class="af-lbclose" onclick="closeLightbox()">✕</button>
+  <span class="af-lbarrow ll" onclick="lbPrev(event)">‹</span>
+  <img class="af-lbimg" id="lbImg" src="" alt="">
+  <span class="af-lbarrow lr" onclick="lbNext(event)">›</span>
+  <div class="af-lbctr" id="lbCtr"></div>
+</div>
+
+<script>
+/* ── DATA FROM FLASK ── */
+const CARS = [
+  {% for car in cars %}
+  {
+    id: {{ car.id }},
+    make: {{ car.car_name | tojson }},
+    model: {{ car.car_model | tojson }},
+    year: {{ car.car_year | tojson }},
+    colour: {{ car.car_color | tojson }},
+    hp: {{ car.horse_power | tojson }},
+    top: {{ car.top_speed | tojson }},
+    rating: {{ car.rating | tojson }},
+    price: "{{ '{:,.0f}'.format(car.car_price) }}",
+    availability: {{ car.availability | tojson }},
+    description: {{ (car.information or '') | tojson }},
+    images: [{% for img in car.images %}{{ url_for('static', filename='uploads/' + img.image_filename) | tojson }}{% if not loop.last %},{% endif %}{% endfor %}]
+  }{% if not loop.last %},{% endif %}
+  {% endfor %}
+];
+
+/* ── STATE ── */
+let gIdx = 0, gImgs = [], lbIdx = 0;
+const ssTimers = {};
+
+/* ── BUILD CARD ── */
+function buildCard(car, ri) {
+  const avMap = {available:'b-av', limited:'b-li', sold:'b-so'};
+  const avLbl = {available:'● Available', limited:'◆ Limited Stock', sold:'✕ Sold'};
+  const sold = car.availability === 'sold';
+
+  let imgHTML = '';
+  if (car.images && car.images.length > 0) {
+    const slides = car.images.map(s => `<img src="${s}" loading="lazy">`).join('');
+    const dots = car.images.length > 1
+      ? `<div class="af-sdots">${car.images.map((_, i) => `<span class="${i === 0 ? 'on' : ''}"></span>`).join('')}</div>`
+      : '';
+    imgHTML = `<div class="af-strack" id="st${ri}">${slides}</div>${dots}`;
+  } else {
+    imgHTML = `<div class="af-nophoto">No Image Uploaded</div>`;
+  }
+
+  return `
+<div class="af-card" data-avail="${car.availability}" onclick="openModal(${ri})">
+  <div class="af-badge ${avMap[car.availability]}">${avLbl[car.availability]}</div>
+  <div class="af-imgwrap">${imgHTML}</div>
+  <div class="af-cardbody">
+    <div class="af-carmake">${car.make} · ${car.year}</div>
+    <div class="af-carmodel">${car.model}</div>
+    <div class="af-specs">
+      <div class="af-spec"><div class="af-sv">${car.hp != null ? car.hp : '—'}</div><div class="af-sk">HP</div></div>
+      <div class="af-spec"><div class="af-sv">${car.rating != null ? car.rating : '—'} &#9733</div><div class="af-sk">Rating(1-5)</div></div>
+      <div class="af-spec"><div class="af-sv">${car.top != null ? car.top : '—'}</div><div class="af-sk">Top Spd</div></div>
+    </div>
+    <div class="af-cardfooter">
+      <div>
+        <div class="af-plbl">List Price</div>
+        <div class="af-price"><sup>£</sup>${car.price}</div>
+      </div>
+      <button class="af-btn" onclick="event.stopPropagation(); openModal(${ri})" ${sold ? 'disabled' : ''}>
+        ${sold ? 'Sold Out' : 'View Details'}
+      </button>
+    </div>
+  </div>
+</div>`;
+}
+
+/* ── RENDER GRID ── */
+function renderGrid(filter) {
+  Object.values(ssTimers).forEach(t => clearInterval(t));
+  const grid = document.getElementById('carGrid');
+  const list = filter === 'all' ? CARS : CARS.filter(c => c.availability === filter);
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="af-empty">No vehicles in this category right now</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(c => buildCard(c, CARS.indexOf(c))).join('');
+  startSlideshows();
+}
+
+function filterCards(f, btn) {
+  document.querySelectorAll('.af-fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(f);
+}
+
+/* ── CARD SLIDESHOWS ── */
+function startSlideshows() {
+  CARS.forEach((car, ri) => {
+    const track = document.getElementById('st' + ri);
+    if (!track || track.children.length <= 1) return;
+    let pos = 0;
+    ssTimers[ri] = setInterval(() => {
+      pos = (pos + 1) % track.children.length;
+      track.style.transform = `translateX(-${pos * 100}%)`;
+      const dots = track.parentElement.querySelectorAll('.af-sdots span');
+      dots.forEach((d, i) => d.classList.toggle('on', i === pos));
+    }, 3000);
+  });
+}
+
+/* ── MODAL GALLERY ── */
+function setGalleryImg(i) {
+  gIdx = i;
+  document.getElementById('mGimg').src = gImgs[i];
+  document.getElementById('mGctr').textContent = gImgs.length > 1 ? `${i + 1} / ${gImgs.length}` : '';
+  document.querySelectorAll('#mThumbs img').forEach((t, j) => t.classList.toggle('on', j === i));
+}
+
+function buildThumbs() {
+  const container = document.getElementById('mThumbs');
+  if (gImgs.length <= 1) { container.innerHTML = ''; return; }
+  container.innerHTML = gImgs.map((s, i) =>
+    `<img src="${s}" class="${i === 0 ? 'on' : ''}" onclick="setGalleryImg(${i})">`
+  ).join('');
+}
+
+function gNext(e) { e.stopPropagation(); if (gImgs.length > 1) setGalleryImg((gIdx + 1) % gImgs.length); }
+function gPrev(e) { e.stopPropagation(); if (gImgs.length > 1) setGalleryImg((gIdx - 1 + gImgs.length) % gImgs.length); }
+
+/* ── OPEN MODAL ── */
+function openModal(ri) {
+  const car = CARS[ri];
+  if (!car) return;
+
+  const avCls = {available:'av-av', limited:'av-li', sold:'av-so'};
+  const avTxt = {available:'● Available', limited:'◆ Limited Stock', sold:'✕ Sold'};
+
+  document.getElementById('mTitle').textContent = car.model;
+  document.getElementById('mMake').textContent = `${car.make} · ${car.year} · ${car.colour}`;
+  document.getElementById('mPrice').textContent = '£' + car.price;
+  document.getElementById('mDesc').textContent = car.description || '';
+  document.getElementById('mAvail').textContent = avTxt[car.availability] || car.availability;
+  document.getElementById('mAvail').className = 'af-mavail ' + (avCls[car.availability] || '');
+
+  const bookBtn = document.getElementById('mBook');
+  if (car.availability === 'sold') {
+    bookBtn.textContent = 'Unavailable'; bookBtn.style.background = 'var(--steel)'; bookBtn.disabled = true;
+  } else {
+    bookBtn.textContent = 'Reserve This Car'; bookBtn.style.background = ''; bookBtn.disabled = false;
+  }
+
+  gImgs = (car.images && car.images.length) ? car.images : [];
+  const gallery = document.getElementById('mGallery');
+  if (gImgs.length > 0) {
+    gallery.style.display = '';
+    setGalleryImg(0);
+    buildThumbs();
+    document.getElementById('gArrowL').style.display = gImgs.length > 1 ? '' : 'none';
+    document.getElementById('gArrowR').style.display = gImgs.length > 1 ? '' : 'none';
+  } else {
+    gallery.style.display = 'none';
+  }
+
+  const specs = [
+    {v: car.hp != null ? car.hp + ' hp' : '—', k: 'Power'},
+    {v: car.top != null ? car.top + ' mph' : '—', k: 'Top Speed'},
+    {v: car.colour || '—', k: 'Colour'},
+    {v: car.year || '—', k: 'Year'},
+    {v: '—', k: '0–60 mph'},
+    {v: car.availability, k: 'Status'}
+  ];
+  document.getElementById('mSpecs').innerHTML = specs.map(s =>
+    `<div class="af-msc"><div class="af-msv">${s.v}</div><div class="af-msk">${s.k}</div></div>`
+  ).join('');
+
+  document.getElementById('afOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('afOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e) { if (e.target === document.getElementById('afOverlay')) closeModal(); }
+
+/* ── LIGHTBOX ── */
+function openLightbox() {
+  if (!gImgs.length) return;
+  lbIdx = gIdx;
+  setLbImg(lbIdx);
+  document.getElementById('afLb').classList.add('open');
+}
+function setLbImg(i) {
+  lbIdx = i;
+  document.getElementById('lbImg').src = gImgs[i];
+  document.getElementById('lbCtr').textContent = gImgs.length > 1 ? `${i + 1} / ${gImgs.length}` : '';
+}
+function lbNext(e) { e.stopPropagation(); setLbImg((lbIdx + 1) % gImgs.length); }
+function lbPrev(e) { e.stopPropagation(); setLbImg((lbIdx - 1 + gImgs.length) % gImgs.length); }
+function closeLightbox() { document.getElementById('afLb').classList.remove('open'); }
+function lbOverlayClick(e) { if (e.target === document.getElementById('afLb')) closeLightbox(); }
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', e => {
+  const lbOpen = document.getElementById('afLb').classList.contains('open');
+  const moOpen = document.getElementById('afOverlay').classList.contains('open');
+  if (e.key === 'Escape') { if (lbOpen) closeLightbox(); else if (moOpen) closeModal(); }
+  if (e.key === 'ArrowRight') { if (lbOpen) lbNext(e); else if (moOpen && gImgs.length > 1) setGalleryImg((gIdx + 1) % gImgs.length); }
+  if (e.key === 'ArrowLeft')  { if (lbOpen) lbPrev(e); else if (moOpen && gImgs.length > 1) setGalleryImg((gIdx - 1 + gImgs.length) % gImgs.length); }
+});
+
+/* ── FINANCE CALCULATOR ── */
+function fmt(n) { return '£' + Math.round(n).toLocaleString('en-GB'); }
+
+function calcFinance() {
+  const price   = parseFloat(document.getElementById('finPrice').value) || 0;
+  const deposit = parseFloat(document.getElementById('finDeposit').value) || 0;
+  const months  = parseInt(document.getElementById('finTerm').value) || 48;
+  const apr     = parseFloat(document.getElementById('finAPR').value) || 0;
+  const loan    = Math.max(0, price - deposit);
+  const pct     = price > 0 ? Math.round((deposit / price) * 100) : 0;
+  document.getElementById('depositPct').textContent = pct + '%';
+  document.getElementById('finDepositRange').max = price;
+  let monthly, totalCost, interest;
+  if (apr === 0) {
+    monthly = loan / months;
+  } else {
+    const r = (apr / 100) / 12;
+    monthly = loan * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+  }
+  totalCost = deposit + monthly * months;
+  interest  = totalCost - price;
+  document.getElementById('resMonthly').textContent  = fmt(monthly);
+  document.getElementById('resTotalCost').textContent = fmt(totalCost);
+  document.getElementById('resInterest').textContent  = fmt(Math.max(0, interest));
+  document.getElementById('resLoan').textContent      = fmt(loan);
+}
+
+function syncDeposit(val) {
+  document.getElementById('finDeposit').value = val;
+  calcFinance();
+}
+
+/* ── CONTACT FORM ── */
+
+document.getElementById("contactForm").addEventListener("submit", async function(e) {
+    e.preventDefault(); // Prevent page reload
+    const form = e.target;
+    const formData = new FormData(form);
+    try {
+        const response = await fetch("/", {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.ok) {
+            document.getElementById("formSuccess").style.display = "block";
+            form.reset();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+let searchTimer = null;
+
+function liveSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    const q     = document.getElementById('searchInput').value.trim();
+    const avail = document.getElementById('filterAvail').value;
+    const min   = document.getElementById('filterMin').value;
+    const max   = document.getElementById('filterMax').value;
+    const type  = document.getElementById('filterType').value;
+    const clear = document.getElementById('clearSearch');
+    const count = document.getElementById('searchResultsCount');
+
+    const hasFilter = q || avail || min || max || type;
+    clear.style.display = hasFilter ? '' : 'none';
+
+    if (!hasFilter) {
+      count.style.display = 'none';
+      renderGrid('all');
+      return;
+    }
+
+    const params = new URLSearchParams();
+    if (q)     params.append('q', q);
+    if (avail) params.append('availability', avail);
+    if (min)   params.append('min_price', min);
+    if (max)   params.append('max_price', max);
+    if (type)  params.append('car_type', type);
+
+    fetch(`/search?${params.toString()}`)
+      .then(r => r.json())
+      .then(results => {
+        Object.values(ssTimers).forEach(t => clearInterval(t));
+        const grid = document.getElementById('carGrid');
+        count.style.display = '';
+        count.textContent = `${results.length} vehicle${results.length !== 1 ? 's' : ''} found`;
+
+        if (!results.length) {
+          grid.innerHTML = `<div class="af-empty">No vehicles found — try adjusting your search</div>`;
+          return;
+        }
+        grid.innerHTML = results.map((car, i) => buildCard(car, i)).join('');
+        startSlideshows();
+      })
+      .catch(() => {
+        document.getElementById('carGrid').innerHTML =
+          `<div class="af-empty">Search unavailable — please try again</div>`;
+      });
+  }, 350);
+}
+
+function clearSearchFields() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterAvail').value = '';
+  document.getElementById('filterMin').value   = '';
+  document.getElementById('filterMax').value   = '';
+  document.getElementById('filterType').value  = '';
+  document.getElementById('clearSearch').style.display = 'none';
+  document.getElementById('searchResultsCount').style.display = 'none';
+  renderGrid('all');
+}
+/* ── INIT ── */
+calcFinance();
+renderGrid('all');
+</script>
+</body>
+</html>
+{%endblock%}

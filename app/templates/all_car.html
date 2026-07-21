@@ -1,0 +1,61 @@
+{%extends 'index.html'%}
+
+{%from 'bootstrap5/form.html' import render_field, render_form_row%}
+{%block navbar%}
+{%include 'navbar.html'%}
+{%endblock%}
+{%block styles%}
+
+<link rel="stylesheet" href="{{url_for('static', filename='css/flash.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/navigation.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/information.css')}}">
+
+{%endblock%}
+
+{% block scripts %}
+<script src="{{url_for('static',filename='js/flash.js')}}"></script>
+<script src="{{url_for('static',filename='js/navigation.js')}}"></script>
+{% endblock %}
+
+{%block content%}
+<div class="container-fluid">
+    <div class="row py-5">
+        <div class="col">
+            <div class="card ">
+                <h2 class="text-center fw-bold">Dashboard</h2>
+                <div class="card-body">
+                    <table class="table">
+                        <thead class="table-dark">
+                            <th>Car ID</th>
+                            <th>Car Name</th>
+                            <th>Car Model</th>
+                            <th>Car Year</th>
+                            <th>Car Price</th>
+                            <th>View</th>
+                            <th>Edit</th>
+                            <th>Update Availabilty</th>
+                           
+                        </thead>
+                        {%for car in cars%}
+                        <tbody>
+                            <tr>
+                                <td>{{car.id}}</td>
+                                <td>{{car.car_name}}</td>
+                                <td>{{car.car_model}}</td>
+                                <td>{{car.car_year}}</td>
+                                <td>{{car.car_price}}</td>
+                                <td><a href="{{url_for('car_info',id=car.id)}}" class="btn btn-outline-primary">view</a></td>
+                                <td><a href="{{url_for('edit_car',id=car.id)}}" class="btn btn-outline-success">Edit</a></td>
+                            </tr>
+
+                        </tbody>
+                        {%endfor%}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{%endblock%}
