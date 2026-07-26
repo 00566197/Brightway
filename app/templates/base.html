@@ -31,7 +31,7 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
 
 /* NAV */
 .af-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,12,0.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(232,67,58,0.2)}
-.af-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.6rem;letter-spacing:.18em;color:var(--white);text-decoration:none}
+.af-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;letter-spacing:.18em;color:var(--white);text-decoration:none}
 .af-logo span{color:var(--accent)}
 .af-navlinks{display:flex;gap:32px;list-style:none}
 .af-navlinks a{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
@@ -44,8 +44,10 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
 .af-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(108deg,transparent 0,transparent 120px,rgba(232,67,58,.03) 120px,rgba(232,67,58,.03) 121px);pointer-events:none}
 .af-hero::after{content:'';position:absolute;bottom:-200px;left:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(232,67,58,.12) 0%,transparent 65%);pointer-events:none}
 .af-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.3em;color:var(--accent);margin-bottom:20px;text-transform:uppercase}
-.af-htitle{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(2.8rem,7vw,6rem);line-height:.92;color:var(--white);max-width:900px}
-.af-htitle em{font-style:normal;color:var(--accent);display:block}
+.af-htitle{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2;line-height:.92;color:green;max-width:900px}
+.af-htitle em{font-style:normal;color:green;display:block}
+.af-hsub1{margin-top:24px;font-size:1.2rem;font-weight:300;color:var(--muted);max-width:460px;line-height:1.7}
+
 .af-hsub{margin-top:24px;font-size:1rem;font-weight:300;color:var(--muted);max-width:460px;line-height:1.7}
 .af-hstats{display:flex;gap:52px;margin-top:48px}
 .af-stat-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:var(--white);line-height:1}
@@ -226,26 +228,28 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
 
 <!-- NAV -->
 <nav class="af-nav">
-  <a class="af-logo" href="/">BRIGHT<span>WAY </span> MOTORS LTD</a>
+  <a class="af-logo" href="/">BRIGHT<span>WAY </span> MOTORS </a>
   <ul class="af-navlinks">
-    <li><a href="#inventory">Inventory</a></li>
+    <li><a href="#inventory">Stock</a></li>
     <li><a href="#finance">Finance</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact">Contact Us</a></li>
   </ul>
   <a class="af-cta" href="#inventory">Showroom</a>
 </nav>
 
 <!-- HERO -->
 <section class="af-hero">
-  <div class="af-eyebrow">// Performance Automotive — Est. 2009</div>
-  <h1 class="af-htitle">Bright<em>BEYOND</em>LIMITS</h1>
-  <p class="af-hsub">BrightWay Auto, providing quality used cars & a professional service based in Bedworth we can help you find your dream car!</p>
-  <p class="af-hsub">Welcome to BrightWay Auto, offering huge savings on used cars in Bedworth, West midlands.
-With an extensive range of second hand cars featuring all makes and models, BrightWay Auto can provide the right car at the right price. With so much choice on second hand cars why go anywhere else? Get the best prices and widest choice on quality used cars in Bedworth, contact us today!</p>
+
+  
+  <p class="af-hsub1 fw-bold">BrightWay Motors, providing quality used cars & a professional service based in Bedworth we can help you find your dream car!</p>
+  <p class="af-hsub">Welcome to BrightWay Motors, offering huge savings on used cars in Bedworth, West midlands.
+With an extensive range of second hand cars featuring all makes and models, BrightWay Motors can provide the right car at the right price. With so much choice on second hand cars why go anywhere else? Get the best prices and widest choice on quality used cars in Bedworth, contact us today!</p>
+<P>Viewing, strickly by appointment</P>
+<h1 class="af-htitle">Brightway To Buy </h1>
   <div class="af-hstats">
     <div><div class="af-stat-num">{{ cars|length }}<span>+</span></div><div class="af-stat-lbl">Vehicles Listed</div></div>
-    <div><div class="af-stat-num">4.9<span>★</span></div><div class="af-stat-lbl">Customer Rating</div></div>
-    <div><div class="af-stat-num">19<span>yr</span></div><div class="af-stat-lbl">Experience</div></div>
+    
+    <div><div class="af-stat-num">over 12<span>yr</span></div><div class="af-stat-lbl">Experience</div></div>
   </div>
 </section>
 
@@ -454,11 +458,7 @@ With an extensive range of second hand cars featuring all makes and models, Brig
         <div class="af-fin-card-desc">Borrow a fixed amount from our lending partners at a competitive rate. You own the car from day one with no mileage restrictions.</div>
         <span class="af-fin-tag">Own From Day 1</span>
       </div>
-      <div class="af-fin-card">
-        <div class="af-fin-card-title">Lease (PCH)</div>
-        <div class="af-fin-card-desc">Drive a new car every few years with no depreciation risk. Fixed monthly costs, servicing packages available, simply return at end of term.</div>
-        <span class="af-fin-tag">Lowest Monthly Cost</span>
-      </div>
+ 
     </div>
   </div>
 </section>

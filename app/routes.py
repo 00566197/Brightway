@@ -251,7 +251,6 @@ def edit_car(id):
 
 @app.route('/staff/home',methods=['GET','POST'])
 @login_required
-
 def staff_page():
     cars=Car.query.all()
     return render_template(
