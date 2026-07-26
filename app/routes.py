@@ -253,8 +253,8 @@ def edit_car(id):
 @login_required
 
 def staff_page():
-     cars=Car.query.all()
-     return render_template(
+    cars=Car.query.all()
+    return render_template(
           'all_car.html',
           cars=cars
      )
