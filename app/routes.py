@@ -151,9 +151,9 @@ def search():
         'availability': car.availability,
         'description': car.information or '',
         'images': [
-            '/static/uploads/' + img.image_filename
-            for img in car.images
-        ]
+    img.image_filename
+    for img in car.images
+]
     } for car in cars])
 
 @app.route('/add/car', methods=['POST','GET'])
