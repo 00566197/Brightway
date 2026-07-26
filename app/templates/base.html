@@ -750,13 +750,23 @@ function openModal(ri) {
   document.getElementById('mAvail').textContent = avTxt[car.availability] || car.availability;
   document.getElementById('mAvail').className = 'af-mavail ' + (avCls[car.availability] || '');
 
-  const bookBtn = document.getElementById('mBook');
-  if (car.availability === 'sold') {
+const bookBtn = document.getElementById('mBook');
+if (car.availability === 'sold') {
     bookBtn.textContent = 'Unavailable'; bookBtn.style.background = 'var(--steel)'; bookBtn.disabled = true;
-  } else {
+} else {
     bookBtn.textContent = 'Reserve This Car'; bookBtn.style.background = ''; bookBtn.disabled = false;
-  }
+}
 
+bookBtn.onclick = function() {
+    closeModal();
+    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+};
+bookBtn.onclick = function() {
+    closeModal();
+    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    const msgField = document.querySelector('#contact textarea[name="message"]');
+    if (msgField) msgField.value = `I'm interested in reserving the ${car.make} ${car.model}`;
+};
   gImgs = (car.images && car.images.length) ? car.images : [];
   const gallery = document.getElementById('mGallery');
   if (gImgs.length > 0) {
