@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import requests
 from lxml import etree
 from flask import Response
+from r2_storage import upload_image
 
 
 ##feeding 
@@ -154,7 +155,9 @@ def search():
             for img in car.images
         ]
     } for car in cars])
+
 @app.route('/add/car', methods=['POST','GET'])
+@login_required
 def add_car():
     form=CarUpload()
     if form.validate_on_submit():
@@ -174,14 +177,14 @@ def add_car():
         db.session.add(new_car)
         db.session.commit()  
 
-        uploaded_files = request.files.getlist('images')  
-        for file in uploaded_files[:30]:  # cap at 5
+        uploaded_files = request.files.getlist('images')
+            
+        for file in uploaded_files[:30]:  # cap at 30
             if file and file.filename:
-                filename = secure_filename(file.filename)
-                file.save(os.path.join('app/static/uploads', filename))
-                new_image = CarImages(image_filename=filename, car_id=new_car.id)
-                db.session.add(new_image)
-            db.session.commit()
+                image_url = upload_image(file)
+            new_image = CarImages(image_filename=image_url, car_id=new_car.id)
+            db.session.add(new_image)
+        db.session.commit()
         return redirect(url_for('index'))
     else:
         print(form.errors)
@@ -191,12 +194,14 @@ def add_car():
     )
 
 @app.route('/view/messages')
+@login_required
 def messages():
     all_messages = Message.query.order_by(Message.id.desc()).all()
     unread_count = Message.query.filter_by(is_read='unread').count()
     return render_template('view_messages.html', messages=all_messages, unread_count=unread_count)
 
 @app.route('/mark-read/<int:id>', methods=['POST'])
+@login_required
 def mark_read(id):
     message = Message.query.get_or_404(id)
     message.is_read = 'read'
@@ -208,6 +213,7 @@ def mark_read(id):
     })
 
 @app.route('/edit/car/<int:id>',methods=['GET','POST'])
+@login_required
 def edit_car(id):
     car=Car.query.get_or_404(id)
     form=CarUpload()
@@ -244,6 +250,8 @@ def edit_car(id):
     )
 
 @app.route('/staff/home',methods=['GET','POST'])
+@login_required
+
 def staff_page():
      cars=Car.query.all()
      return render_template(
@@ -252,6 +260,7 @@ def staff_page():
      )
 
 @app.route('/car/information/<int:id>')
+@login_required
 def car_info(id):
 
     car = Car.query.get_or_404(id)
@@ -261,6 +270,7 @@ def car_info(id):
 
 
 @app.route('/delete/<int:id>',methods=['GET','POST','DELETE'])
+@login_required
 def car_delete(id):
     car=Car.query.get_or_404(id)
     db.session.delete(car)
@@ -268,214 +278,31 @@ def car_delete(id):
     flash('Car information successfully deleted', 'success')
     return redirect(url_for('staff_page'))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""@app.route('/staff/page',methods=['GET','POST'])
-def staff_page():
-    if current_user.role.value !='staff':
-            abort(403)
-    query=request.args.get("search","")
-    filter_option=request.args.get("filter",'all')
-
-    consultations=[]
-    installations=[]
-    if filter_option in['consultation','all']:
-        consultations_query=db.session.query(Consultation)
-        if query:
-            consultations=consultations_query.filter(Consultation.date.ilike(f"%{query}%"))
-        consultations=consultations_query.order_by(Consultation.timestamp.desc()).limit(10).all()
-    if filter_option in['installation','all']:
-        installation_query=db.session.query(Installation)
-        if query:
-            installations=installation_query.filter(Installation.date.ilike(f"%{query}%"))
-        installations=installation_query.order_by(Installation.timestamp.desc()).limit(10).all()
+@app.route('/privacy')
+def privacy_policy():
     return render_template(
-        'staff_page.html',
-        consultations=consultations,
-        installations=installations,
-        selected_filter=filter_option,
-        query=query
-    )
-def staff():
-   form = SearchForm(request.args)
-   query = form.search.data
-   sort_order = form.sort.data
-   user_query = db.session.query(User)
-   students=[]
-   # Apply search first
-   if query:
-        user_query = user_query.filter(
-           func.concat(User.f_name, " ", User.s_name).ilike(f"%{query}%") 
-       )
-   # Apply sorting
-   if sort_order == 'asc':
-       user_query = user_query.order_by(User.f_name.asc())
-   elif sort_order == 'desc':
-       user_query = user_query.order_by(User.f_name.desc())
-   students = user_query.all()
-   return render_template(
-       'staff_page.html',
-       students=students,
-       form=form,
-       query=query
-   )
-
-
-@app.route('/delete/news/<int:id>',methods=['DELETE'])
-@login_required
-def delete_news(id):
-    if current_user.role.value !='staff':
-            abort(403)
-    product=NewsInfo.query.get_or_404(id)
-
-    db.session.delete(product)
-    db.session.commit()
-    flash('news information deleted successfully','success')
-    return jsonify(
-        {
-            'success':True,
-            'message':'Product deleted'
-        }
+        'privacy_policy.html'
     )
 
-@app.route('/add/news',methods=['GET','POST'])
-@login_required
-def add_news():
-    if current_user.role.value !='staff':
-        abort(403)
-    form=ProductForm()
-    form=NewsForm()
+@app.route('/tos')
+def Tos():
+    return render_template(
+        'tos.html'
+    )
 
+
+
+import os
+
+@app.route('/staff/login', methods=['GET', 'POST'])
+def staff_login():
+    form = LoginForm()
     if form.validate_on_submit():
-        
-        file=form.video.data
-        if file and file.filename !='':
-            
-            videoname=secure_filename(file.filename)
-            save_path=os.path.join(
-                current_app.config['UPLOAD_FOLDER'],
-                videoname
-            )
-            file.save(save_path)
+        if form.username.data != os.environ.get('STAFF_USERNAME'):
+            return redirect(url_for('staff_login'))
+        if form.password.data != os.environ.get('STAFF_PASSWORD'):
+            return redirect(url_for('staff_login'))
         else:
-            videoname=None
-        news=NewsInfo(
-            title=form.title.data,
-            description=form.descripiton.data,
-            videoname=videoname
-
-        )
-        db.session.add(news)
-        db.session.commit()
-        flash('Information added succesfully ','success')
-        return redirect(url_for('view_staff_news',id=news.id))
-    return render_template(
-        'new_news.html',
-        form=form
-        )
-"""
-"""
-@app.route('/history/energy/usage')
-@login_required
-def view_energy_history():
-    
-    energies = db.session.query(Energy).filter(Energy.user==current_user).all()
-    days=[r.date_used for r in energies]
-    energy=[r.energy_used for r in energies]
-    if energies is None:
-        flash('No energy history available ','error')
-        return redirect(url_for('index'))
-    return render_template(
-        'view_energy_history.html',
-        energies=energies,
-        days=days,
-        energy=energy
-    )
-"""
+            login_user(staff_user)
+            return redirect(url_for('staff_page'))
+    return render_template('login.html', form=form)

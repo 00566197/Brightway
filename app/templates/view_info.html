@@ -1,20 +1,24 @@
 {%extends 'index.html'%}
 
 {%from 'bootstrap5/form.html' import render_field, render_form_row%}
-
-{% block navbar %}
-{% include 'navbar.html' %}
-{% endblock %}
+{%block navbar%}
+{%include 'navbar.html'%}
+{%endblock%}
 {%block styles%}
-<link rel="stylesheet" href="{{url_for('static', filename='css/navigation.css')}}">
+
 <link rel="stylesheet" href="{{url_for('static', filename='css/flash.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='css/information.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/navigation.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/pop.css')}}">
+
 {%endblock%}
 
 {% block scripts %}
 <script src="{{url_for('static',filename='js/flash.js')}}"></script>
 <script src="{{url_for('static',filename='js/navigation.js')}}"></script>
+<script src="{{url_for('static', filename='js/popup.js')}}"></script>
 {% endblock %}
+
 {%block content%}
 <div class="container py-5">
     <div class="row">

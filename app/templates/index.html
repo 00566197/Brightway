@@ -27,18 +27,31 @@
 </div>
   {% endif %}
 {% endwith %}
-<div id="popup" class="popup">
+<!-- Entry Confirmation Modal -->
+<div id="entryModal" class="entry-modal-overlay">
+  <div class="entry-modal">
+    <h2>Before you continue</h2>
+    <p>Please confirm the following to use AutoForge:</p>
 
-        <div class="popup-content">
+    <form id="entryForm">
+      <label class="entry-checkbox">
+        <input type="checkbox" id="ageConfirm" required>
+        I confirm I am 18 years of age or older
+      </label>
 
-            <p>This website uses cookies to improve your experience.</p>
 
-            <button id="accept">Accept</button>
-            <button id="reject">Reject</button>
 
-        </div>
+      <label class="entry-checkbox">
+        <input type="checkbox" id="emailConfirm" required>
+        I agree that AutoForge may contact me by email regarding my enquiries
+      </label>
+      <p>Learn More about our Privacy Policy and Cookie Policy <a href="{{url_for('privacy_policy')}}">Learn More</a></p>
+  
 
-    </div>
+      <button type="submit" class="entry-submit-btn">Continue</button>
+    </form>
+  </div>
+</div>  
 
 {%block content%}
 

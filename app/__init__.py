@@ -12,6 +12,8 @@ Bootstrap5(app)
 db=SQLAlchemy(app)
 migrate=Migrate(app,db)
 login=LoginManager(app)
+login.login_view='staff_login'
+login.login_message='Please Log in to access this page'
 
 ## this code below wil be used for the succesful video upload and storage 
 UPLOAD_FOLDER=os.path.join(app.root_path, 'static', 'uploads')

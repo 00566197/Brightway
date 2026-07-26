@@ -1,39 +1,44 @@
-.cookie-popup {
+.entry-modal-overlay {
+    display: none;
     position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
 }
-.cookie-box {
-    background:white;
-    width: 500px;
-    padding: 30px;
+
+.entry-modal {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 2rem;
     border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 420px;
+    width: 90%;
 }
-.cookie-box h2 {
-    margin-bottom: 15px;
+
+.entry-modal h2 {
+    margin-top: 0;
 }
-.cookie-box p {
-    margin-bottom: 20px;
+
+.entry-checkbox {
+    display: block;
+    margin: 1rem 0;
+    font-size: 0.95rem;
 }
-.cookie-box button {
-    padding: 10px 20px;
-    margin: 10px;
+
+.entry-checkbox input {
+    margin-right: 0.5rem;
+}
+
+.entry-submit-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.75rem;
+    background: #d4a017;
+    color: #000;
     border: none;
-    cursor: pointer;
+    border-radius: 6px;
     font-weight: bold;
+    cursor: pointer;
 }
-#acceptCookies {
-    background: green;
-    color: white;
-}
-#rejectCookies {
-    background: red;
-    color: white;
-}
- 

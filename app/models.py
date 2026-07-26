@@ -8,14 +8,11 @@ from app.types import Roles
 
 @login.user_loader
 def load_user(id):
-    return db.session.get(User, int(id))
-class User(db.Model,UserMixin):
-    __tablename__='users'
-    id=Column(Integer,primary_key=True)
-    email=Column(String,nullable=False)
-    password=Column(String,nullable=False)
-    role=Column(String,nullable=False)
-    timestamp=Column(DateTime,default=lambda:datetime.now(timezone.utc),nullable=False)
+    return staff_user
+class StaffUser(UserMixin):
+    id=1
+
+staff_user=StaffUser()
 
 
 class Car(db.Model):

@@ -1,13 +1,25 @@
 {% extends 'index.html' %}
 
 {%from "bootstrap5/form.html" import render_field, render_form_row%}
+
+{%block styles%}
+
+
+<link rel="stylesheet" href="{{url_for('static', filename='css/pop.css')}}">
+{%endblock%}
+
+{% block scripts %}
+
+<script src="{{url_for('static', filename='js/popup.js')}}"></script>
+{% endblock %}
+
 {%block content%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AUTOFORGE — Elite Performance Cars</title>
+<title>BRIGHTWAY MOTO— Elite Performance Cars</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
@@ -214,20 +226,22 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
 
 <!-- NAV -->
 <nav class="af-nav">
-  <a class="af-logo" href="/">AUTO<span>FORGE</span></a>
+  <a class="af-logo" href="/">BRIGHT<span>WAY </span> MOTORS LTD</a>
   <ul class="af-navlinks">
     <li><a href="#inventory">Inventory</a></li>
     <li><a href="#finance">Finance</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a class="af-cta" href="#inventory">+ Showroom</a>
+  <a class="af-cta" href="#inventory">Showroom</a>
 </nav>
 
 <!-- HERO -->
 <section class="af-hero">
   <div class="af-eyebrow">// Performance Automotive — Est. 2009</div>
   <h1 class="af-htitle">DRIVE<em>BEYOND</em>LIMITS</h1>
-  <p class="af-hsub">Hand-curated performance vehicles sourced worldwide. Live pricing. Real-time availability. Zero compromise.</p>
+  <p class="af-hsub">BrightWay Auto, providing quality used cars & a professional service based in Bedworth we can help you find your dream car!</p>
+  <p class="af-hsub">Welcome to BrightWay Auto, offering huge savings on used cars in Bedworth, West midlands.
+With an extensive range of second hand cars featuring all makes and models, BrightWay Auto can provide the right car at the right price. With so much choice on second hand cars why go anywhere else? Get the best prices and widest choice on quality used cars in Bedworth, contact us today!</p>
   <div class="af-hstats">
     <div><div class="af-stat-num">{{ cars|length }}<span>+</span></div><div class="af-stat-lbl">Vehicles Listed</div></div>
     <div><div class="af-stat-num">4.9<span>★</span></div><div class="af-stat-lbl">Customer Rating</div></div>
@@ -461,28 +475,35 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
         <div class="af-contact-icon">📍</div>
         <div>
           <div class="af-contact-card-title">Showroom Address</div>
-          <div class="af-contact-card-val">AutoForge HQ, Unit 12 Performance Park<br>Birmingham, B1 1AA, United Kingdom</div>
+          <div class="af-contact-card-val">Yard 1 Marston Hall Industrial Estate, Marston Lane, Bedworth, CV12 9SD</div>
         </div>
       </div>
       <div class="af-contact-card">
         <div class="af-contact-icon">📞</div>
         <div>
           <div class="af-contact-card-title">Phone</div>
-          <div class="af-contact-card-val">Sales: 0121 000 1234<br>Finance: 0121 000 5678</div>
+          <div class="af-contact-card-val">Sales: 07519089009<br>Finance: 07519089009</div>
         </div>
       </div>
       <div class="af-contact-card">
         <div class="af-contact-icon">✉️</div>
         <div>
           <div class="af-contact-card-title">Email</div>
-          <div class="af-contact-card-val">info@autoforge.co.uk<br>finance@autoforge.co.uk</div>
+          <div class="af-contact-card-val">info@brightwaymotors.co.uk<br>Support@brightwaymotors.co.uk</div>
         </div>
       </div>
       <div class="af-contact-card">
         <div class="af-contact-icon">🕐</div>
         <div>
           <div class="af-contact-card-title">Opening Hours</div>
-          <div class="af-contact-card-val">Monday – Saturday: 9am – 7pm<br>Sunday: 10am – 4pm</div>
+          <div class="af-contact-card-val">Monday – Saturday: 9:30am – 7:30pm<br>Sunday: 10am – 5pm</div>
+        </div>
+      </div>
+      <div class="af-contact-card">
+        <div class="af-contact-icon">🕐</div>
+        <div>
+          <div class="af-contact-card-title">NOTICEℹ️</div>
+          <div class="af-contact-card-val">Viewing strictly by appointment.</div>
         </div>
       </div>
     </div>
@@ -522,14 +543,14 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
 <!-- FOOTER -->
 <footer class="af-footer">
   <div>
-    <div class="af-fbrand">AUTO<span>FORGE</span></div>
+    <div class="af-fbrand">BRIGHT <span>WAY</span></div>
     <p class="af-ftagline">Specialists in high-performance and luxury vehicles. Every car hand-inspected, every price transparent, every drive unforgettable.</p>
   </div>
   <div>
     <div class="af-fcoltitle">Quick Links</div>
     <ul class="af-flinks">
       <li><a href="#inventory">Inventory</a></li>
-      <li><a href="{{ url_for('add_car') }}">List a Car</a></li>
+    
       <li><a href="#finance">Finance Calculator</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -537,14 +558,14 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
   <div>
     <div class="af-fcoltitle">Legal</div>
     <ul class="af-flinks">
-      <li><a href="#">Privacy Policy</a></li>
-      <li><a href="#">Cookie Policy</a></li>
-      <li><a href="#">Terms of Sale</a></li>
+      <li><a href="{{url_for('privacy_policy')}}">Privacy Policy</a></a></li>
+      <li><a href="{{url_for('privacy_policy')}}">Cookie Policy</a></li>
+      <li><a href="{{url_for('Tos')}}">Terms of Sale</a></li>
     </ul>
   </div>
   <div class="af-fbot">
-    <div class="af-fcopy">© 2026 AUTOFORGE LTD — ALL RIGHTS RESERVED</div>
-    <div class="af-fcopy">FCA AUTHORISED · ICO REGISTERED · VAT 123 456 789</div>
+    <div class="af-fcopy">© 2026 BRIGHTWAY MOTORS — ALL RIGHTS RESERVED</div>
+    <div class="af-fcopy">FCA AUTHORISED · ICO REGISTERED · COMPANY NUMBER 17297269</div>
   </div>
 </footer>
 
@@ -609,7 +630,7 @@ const CARS = [
     price: "{{ '{:,.0f}'.format(car.car_price) }}",
     availability: {{ car.availability | tojson }},
     description: {{ (car.information or '') | tojson }},
-    images: [{% for img in car.images %}{{ url_for('static', filename='uploads/' + img.image_filename) | tojson }}{% if not loop.last %},{% endif %}{% endfor %}]
+   images: [{% for img in car.images %}{{ img.image_filename | tojson }}{% if not loop.last %},{% endif %}{% endfor %}]
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 ];

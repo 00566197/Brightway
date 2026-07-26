@@ -1,6 +1,23 @@
 {% extends 'index.html' %}
 
 {%from "bootstrap5/form.html" import render_field, render_form_row%}
+{%block navbar%}
+{%include 'navbar.html'%}
+{%endblock%}
+{%block styles%}
+
+<link rel="stylesheet" href="{{url_for('static', filename='css/flash.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/navigation.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/pop.css')}}">
+
+{%endblock%}
+
+{% block scripts %}
+<script src="{{url_for('static',filename='js/flash.js')}}"></script>
+<script src="{{url_for('static',filename='js/navigation.js')}}"></script>
+<script src="{{url_for('static', filename='js/popup.js')}}"></script>
+{% endblock %}
 
 {%block content%}
 
@@ -20,6 +37,7 @@
     max-width: 1000px;
     margin: 30px auto;
     padding: 25px;
+    margin-top: 100px;
     background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);

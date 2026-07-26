@@ -34,3 +34,9 @@ class MessageUs(FlaskForm):
     enquiry_type=SelectField('Select an enquiry type',choices=[('vehicle enquiry','Vehicle Enquiry'),('test drive request', 'Test Drive Request'),('finance enquiry','Finance Enquiry'),('part exchange','Part Exchange'),('general query','General Query')])
     message=TextAreaField('Message',validators=[DataRequired()])
     submit=SubmitField('Submit')
+
+
+class LoginForm(FlaskForm):
+    username=StringField('Username',validators=[DataRequired()])
+    password=PasswordField('Password',validators=[DataRequired()])
+    submit=SubmitField('Submit')
