@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://brightwaymotors.co.uk/sitemap.xml 

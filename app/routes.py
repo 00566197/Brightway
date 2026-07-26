@@ -305,3 +305,15 @@ def staff_login():
             login_user(staff_user)
             return redirect(url_for('staff_page'))
     return render_template('login.html', form=form)
+
+@app.route('/sitemap.xml')
+def sitemap():
+    cars = Car.query.all()
+    pages = []
+    pages.append({'loc': url_for('index', _external=True)})
+    for car in cars:
+        pages.append({'loc': url_for('view_info', id=car.id, _external=True)})
+
+    sitemap_xml = render_template('sitemap.xml', pages=pages)
+    response = app.response_class(sitemap_xml, mimetype='application/xml')
+    return response
