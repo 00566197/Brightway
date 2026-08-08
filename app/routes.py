@@ -350,3 +350,6 @@ def sitemap():
         "</urlset>"
     )
     return Response(sitemap_xml, mimetype='application/xml')
+@app.route('/robots.txt')
+def robots():
+    return app.send_static_file('robots.txt')
