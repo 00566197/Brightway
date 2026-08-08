@@ -25,7 +25,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root{--carbon:#0a0a0c;--dark:#111318;--panel:#16191f;--rim:#1e2330;--steel:#2c3244;--accent:#e8433a;--amber:#f0a500;--text:#d6dae6;--muted:#6b7280;--white:#f0f2f8}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0; margin-top: 15pt;}
 html{scroll-behavior:smooth}
 body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;overflow-x:hidden}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
@@ -224,6 +224,7 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
   .af-gmain{height:220px}
 }
 </style>
+<!-- Paste into base.html's <head>, on every page -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -232,6 +233,7 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
   "image": "https://brightwaymotors.co.uk/static/logo.png",
   "url": "https://brightwaymotors.co.uk",
   "telephone": "+447519089009",
+  "email": "info@brightwaymotors.co.uk",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Yard 1 Marston Hall Industrial Estate, Marston Lane",
@@ -248,7 +250,7 @@ body{background:var(--carbon);color:var(--text);font-family:'Exo 2',sans-serif;o
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       "opens": "09:30",
       "closes": "19:30"
     },
@@ -581,8 +583,9 @@ With an extensive range of second hand cars featuring all makes and models, Brig
 <!-- FOOTER -->
 <footer class="af-footer">
   <div>
-    <div class="af-fbrand">BRIGHT <span>WAY</span></div>
-    <p class="af-ftagline">Specialize in reliable and everyday car</p>
+    <div class="af-fbrand">
+       <span>BRIGHTWAY </span></div>
+    <p class="af-ftagline">BrightWay Motors specialises in affordable, reliable and budget friendly used cars.</p>
   </div>
   <div>
     <div class="af-fcoltitle">Quick Links</div>
@@ -711,8 +714,11 @@ function buildCard(car, ri) {
         <div class="af-plbl">List Price</div>
         <div class="af-price"><sup>£</sup>${car.price}</div>
       </div>
-      <button class="af-btn" onclick="event.stopPropagation(); openModal(${ri})" ${sold ? 'disabled' : ''}>
-        ${sold ? 'Sold Out' : 'View Details'}
+      <button class="af-btn" onclick="event.stopPropagation(); openModal(${ri})" ${sold ? 'disabled' : '<a href="/car/${car.id"}'}>
+        ${sold
+  ? `<button class="af-btn" disabled>Sold Out</button>`
+  : `<a href="/car/${car.id}" class="af-btn" onclick="event.stopPropagation()">View Details</a>`
+}
       </button>
     </div>
   </div>

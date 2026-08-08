@@ -95,7 +95,7 @@
 
 <div class="car-detail-page">
   <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="{{ url_for('index') }}">Home</a> &raquo;
+    <a href="{{ url_for('index') }}">Home</a> &raquo;<p></p>
     <a href="{{ url_for('index') }}#inventory">Inventory</a> &raquo;
     <span>{{ car.car_year }} {{ car.car_name }} {{ car.car_model }}</span>
   </nav>
@@ -152,8 +152,8 @@
   {% endif %}
 
   <!-- Opens your existing JS modal for the "in-app" feel -->
-  <button class="reserve-btn" onclick="openCarModal({{ car.id }})">Reserve This Car</button>
-  <a href="{{ url_for('index') }}#contact" class="enquire-btn">Enquire About This Car</a>
+ 
+  <a href="{{ url_for('index') }}#contact" class="btn btn-outline-success">Enquire About This Car</a>
 
   {% if related_cars %}
   <div class="related-cars">
