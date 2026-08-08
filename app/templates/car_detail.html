@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{# ^ adjust to whatever your base layout template is called #}
+
+{% block title %}{{ car.car_year }} {{ car.car_name }} {{ car.car_model }} for Sale in Bedworth & Coventry | BrightWay Motors{% endblock %}
+
+{% block meta %}
+<meta name="description" content="{{ car.car_year }} {{ car.car_name }} {{ car.car_model }} - £{{ '{:,.0f}'.format(car.car_price) }}. Available now at BrightWay Motors, Bedworth. Serving Coventry, Nuneaton & the West Midlands.">
+<link rel="canonical" href="{{ url_for('car_detail', car_id=car.id, _external=True) }}">
+{% endblock %}
+
+{% block content %}
+
+<style>
+.car-detail-page{max-width:1100px;margin:0 auto;padding:40px 24px}
+.breadcrumb{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--accent)}
+.car-detail-page h1{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2.4rem;color:var(--white);margin-bottom:8px}
+.location-line{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+.car-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:32px}
+.car-gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--rim);background:var(--dark)}
+.car-summary{background:var(--panel);border:1px solid var(--rim);padding:28px;margin-bottom:32px}
+.car-summary .price{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:2rem;color:var(--amber);margin:0 0 16px}
+.spec-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;padding:0;margin:0}
+.spec-list li{font-family:'Rajdhani',sans-serif;font-size:.95rem;color:var(--white);border-bottom:1px solid var(--rim);padding-bottom:8px}
+.spec-list strong{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px;font-weight:400}
+.car-description h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:var(--white);margin-bottom:12px}
+.car-description p{color:var(--muted);line-height:1.6}
+.reserve-btn,.enquire-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.05em;text-transform:uppercase;padding:14px 28px;border:1px solid var(--accent);background:transparent;color:var(--accent);text-decoration:none;display:inline-block;margin:24px 12px 0 0;cursor:pointer;transition:background .25s,color .25s}
+.reserve-btn:hover,.enquire-btn:hover{background:var(--accent);color:var(--dark)}
+.related-cars{margin-top:48px}
+.related-cars h2{font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--white);font-size:1.2rem;margin-bottom:16px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.related-card{background:var(--panel);border:1px solid var(--rim);text-decoration:none;display:block;transition:border-color .25s}
+.related-card:hover{border-color:var(--accent)}
+.related-card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.related-card p{font-family:'Rajdhani',sans-serif;padding:12px;font-size:.85rem;color:var(--white);margin:0}
+</style>
+
+<!-- Vehicle structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Vehicle",
+  "name": "{{ car.car_year }} {{ car.car_name }} {{ car.car_model }}",
+  "brand": { "@type": "Brand", "name": "{{ car.car_name }}" },
+  "model": "{{ car.car_model }}",
+  "vehicleModelDate": "{{ car.car_year }}",
+  {% if car.car_color %}"color": "{{ car.car_color }}",{% endif %}
+  {% if car.car_type %}"bodyType": "{{ car.car_type }}",{% endif %}
+  "image": [
+    {% for img in car.images %}"{{ url_for('static', filename='uploads/' + img.image_filename, _external=True) }}"{% if not loop.last %},{% endif %}{% endfor %}
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ car.car_price }}",
+    "priceCurrency": "GBP",
+    "availability": "https://schema.org/{% if car.availability == 'Available' %}InStock{% elif car.availability == 'Sold' %}SoldOut{% else %}LimitedAvailability{% endif %}",
+    "url": "{{ url_for('car_detail', car_id=car.id, _external=True) }}",
+    "seller": {
+      "@type": "AutoDealer",
+      "name": "BrightWay Motors",
+      "telephone": "+447519089009",
+      "address": "Yard 1 Marston Hall Industrial Estate, Marston Lane, Bedworth, CV12 9SD"
+    }
+  }
+}
+</script>
+
+<!-- Breadcrumb structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ url_for('index', _external=True) }}" },
+    { "@type": "ListItem", "position": 2, "name": "Inventory", "item": "{{ url_for('index', _external=True) }}#inventory" },
+    { "@type": "ListItem", "position": 3, "name": "{{ car.car_year }} {{ car.car_name }} {{ car.car_model }}" }
+  ]
+}
+</script>
+
+<div class="car-detail-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ url_for('index') }}">Home</a> &raquo;
+    <a href="{{ url_for('index') }}#inventory">Inventory</a> &raquo;
+    <span>{{ car.car_year }} {{ car.car_name }} {{ car.car_model }}</span>
+  </nav>
+
+  <h1>{{ car.car_year }} {{ car.car_name }} {{ car.car_model }}</h1>
+  <p class="location-line">Available now at BrightWay Motors, Bedworth — serving Coventry, Nuneaton &amp; the wider West Midlands.</p>
+
+  <div class="car-gallery">
+    {% for img in car.images %}
+      <img src="{{ url_for('static', filename='uploads/' + img.image_filename) }}"
+           alt="{{ car.car_year }} {{ car.car_name }} {{ car.car_model }} - photo {{ loop.index }}"
+           {% if loop.first %}loading="eager"{% else %}loading="lazy"{% endif %}>
+    {% endfor %}
+  </div>
+
+  <div class="car-summary">
+    <p class="price">£{{ '{:,.0f}'.format(car.car_price) }}</p>
+    <ul class="spec-list">
+      {% if car.car_type %}<li><strong>Type:</strong> {{ car.car_type }}</li>{% endif %}
+      {% if car.car_color %}<li><strong>Colour:</strong> {{ car.car_color }}</li>{% endif %}
+      {% if car.horse_power %}<li><strong>Horsepower:</strong> {{ car.horse_power }} bhp</li>{% endif %}
+      {% if car.top_speed %}<li><strong>Top speed:</strong> {{ car.top_speed }} mph</li>{% endif %}
+      {% if car.rating %}<li><strong>Rating:</strong> {{ car.rating }}/5</li>{% endif %}
+      <li><strong>Availability:</strong> {{ car.availability }}</li>
+    </ul>
+  </div>
+
+  {% if car.information %}
+  <div class="car-description">
+    <h2>Description</h2>
+    <p>{{ car.information }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Opens your existing JS modal for the "in-app" feel -->
+  <button class="reserve-btn" onclick="openCarModal({{ car.id }})">Reserve This Car</button>
+  <a href="{{ url_for('index') }}#contact" class="enquire-btn">Enquire About This Car</a>
+
+  {% if related_cars %}
+  <div class="related-cars">
+    <h2>Other Cars You Might Like</h2>
+    <div class="related-grid">
+      {% for rc in related_cars %}
+        <a href="{{ url_for('car_detail', car_id=rc.id) }}" class="related-card">
+          {% if rc.images %}<img src="{{ url_for('static', filename='uploads/' + rc.images[0].image_filename) }}" alt="{{ rc.car_year }} {{ rc.car_name }} {{ rc.car_model }}">{% endif %}
+          <p>{{ rc.car_year }} {{ rc.car_name }} {{ rc.car_model }} — £{{ '{:,.0f}'.format(rc.car_price) }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function updateUrlForCar(carId) {
+    history.pushState({carId}, '', `/car/${carId}`);
+  }
+</script>
+
+{% endblock %}

@@ -306,10 +306,47 @@ def staff_login():
             return redirect(url_for('staff_page'))
     return render_template('login.html', form=form)
 
+
+@app.route('/car/<int:car_id>')
+def car_detail(car_id):
+    car = Car.query.get_or_404(car_id)
+
+    related_cars = (
+        Car.query
+        .filter(Car.id != car.id, Car.availability == 'Available')
+        .limit(3)
+        .all()
+    )
+    
+
+    return render_template('car_detail.html', car=car, related_cars=related_cars)
+
+
+# --- Sitemap route (dynamic, pulls live inventory) ---
+
+from flask import Response, url_for
+
 @app.route('/sitemap.xml')
 def sitemap():
-    pages = [{'loc': url_for('index', _external=True)}]
+    pages = []
 
-    sitemap_xml = render_template('sitemap.xml', pages=pages)
-    response = app.response_class(sitemap_xml, mimetype='application/xml')
-    return response
+    static_urls = ['index', 'inventory', 'finance', 'contact']  # adjust to your route names
+    for route in static_urls:
+        try:
+            pages.append(f"<url><loc>{url_for(route, _external=True)}</loc></url>")
+        except Exception:
+            pass
+
+    cars = Car.query.filter(Car.availability != 'Sold').all()
+    for car in cars:
+        pages.append(
+            f"<url><loc>{url_for('car_detail', car_id=car.id, _external=True)}</loc></url>"
+        )
+
+    sitemap_xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        + "".join(pages) +
+        "</urlset>"
+    )
+    return Response(sitemap_xml, mimetype='application/xml')
